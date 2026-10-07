@@ -588,13 +588,9 @@ struct WebGpuDataTransferImpl : OrtDataTransferImpl {
       }
     }
 
-#if defined(ORT_USE_EP_API_ADAPTERS)
-    // Plugin streamless calls may overlap. Each call submits its own recording before returning;
-    // explicit streams use their Session's recording instead.
+    // Streamless calls may overlap. Each call submits its own recording before returning;
+    // plugin explicit-stream copies use their Session's recording instead.
     CommandRecordingState recording;
-#else
-    auto& recording = impl.recording_;
-#endif
     DataTransferImpl data_transfer{impl.context_->BufferManager(), recording};
     for (size_t idx = 0; idx < num_tensors; ++idx) {
 #if defined(ORT_USE_EP_API_ADAPTERS)
@@ -655,9 +651,6 @@ struct WebGpuDataTransferImpl : OrtDataTransferImpl {
 
   const OrtApi& ort_api;
   const OrtEpApi& ep_api;
-#if !defined(ORT_USE_EP_API_ADAPTERS)
-  CommandRecordingState recording_;
-#endif
   WebGpuContext* context_;  // Lazily retained until ReleaseImpl.
   int context_id_;          // Track which context we're using
   std::mutex init_mutex_;   // Protects lazy initialization

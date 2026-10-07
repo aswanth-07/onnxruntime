@@ -45,9 +45,9 @@ struct CommandRecordingState;
 //   for its own adapter DataTransferManager. Adapter kernels use this object,
 //   bypassing the factory's C API wrapper.
 //
-// WebGpuDataTransferImpl, defined in webgpu_provider_factory.cc, uses per-call recording
-// for plugin streamless copies and object-owned recording in built-in builds. Session-level
-// creation alone does not bind it to the requesting EP. In plugin builds, an explicit-stream copy uses
+// WebGpuDataTransferImpl, defined in webgpu_provider_factory.cc, uses a per-call recording
+// for streamless copies. Session-level creation alone does not bind it to the requesting EP.
+// In plugin builds, an explicit-stream copy uses
 // ep/sync_stream.cc to construct a temporary webgpu::DataTransferImpl with the
 // owning EP's BufferManager and recording, rather than the C API wrapper's
 // call-local recording.
